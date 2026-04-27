@@ -85,7 +85,7 @@ public class OrderController {
      */
     @PutMapping("/{orderId}")
     public ResponseEntity<ApiResponse<Void>> updateOrderRequest(
-        @PathVariable UUID orderId, @RequestBody OrderRequestDto orderRequestDto, Authentication authentication) {
+        @PathVariable UUID orderId, @RequestBody@Valid OrderRequestDto orderRequestDto, Authentication authentication) {
         // 주문사항 요청 메서드 호출.
         orderService.updateOrderRequest(orderId, orderRequestDto, authentication);
         return ResponseEntity.ok(ApiResponse.success());
