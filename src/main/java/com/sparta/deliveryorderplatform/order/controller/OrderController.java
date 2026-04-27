@@ -41,7 +41,7 @@ public class OrderController {
      * @param authentication
      * @return
      */
-    @PatchMapping("/{orderId}/cancle")
+    @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<ApiResponse<Void>> cancelOrder(@PathVariable UUID orderId, Authentication authentication) {
         orderService.cancleOrder(orderId, authentication);
         return ResponseEntity.ok(ApiResponse.success());
