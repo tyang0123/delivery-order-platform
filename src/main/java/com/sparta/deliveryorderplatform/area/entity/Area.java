@@ -1,0 +1,79 @@
+package com.sparta.deliveryorderplatform.area.entity;
+
+import com.sparta.deliveryorderplatform.global.entity.BaseAuditEntity;
+import com.sparta.deliveryorderplatform.global.exception.CustomException;
+import com.sparta.deliveryorderplatform.global.exception.ErrorCode;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@Table(name = "p_area")
+@Entity
+public class Area extends BaseAuditEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "area_id", columnDefinition = "uuid")
+    private UUID id;
+
+    // 지역명(ex.광화문)
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    //  시 or 도
+    @Column(nullable = false, length = 50)
+    private String city;
+
+    // 구 or 군
+    @Column(nullable = false, length = 50)
+    private String district;
+
+    // 운영 활성화 여부
+    @Builder.Default
+    private Boolean isActive = true;
+
+    public static Area create(String name, String city, String district) {
+        validateLocation(name, city, district);
+
+        return Area.builder()
+            .name(name)
+            .city(city)
+            .district(district)
+            .build();
+    }
+
+    // 지역 기본 정보 수정
+    public void update(String name, String city, String district, Boolean isActive) {
+        validateLocation(name, city, district);
+
+        this.name = name;
+        this.city = city;
+        this.district = district;
+        if (isActive != null) {
+            this.isActive = isActive;
+        }
+    }
+
+    // 운영 지역 삭제
+    public void delete(String username) {
+        super.softDelete(username);
+        this.isActive = false;
+    }
+
+    private static void validateLocation(String name, String city, String district) {
+        if (isInvalid(name) || isInvalid(city) || isInvalid(district)) {
+            throw new CustomException(ErrorCode.VALIDATION_ERROR);
+        }
+    }
+
+    private static boolean isInvalid(String str) {
+        return str == null || str.isBlank();
+    }
+}

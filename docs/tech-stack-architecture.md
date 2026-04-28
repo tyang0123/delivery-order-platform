@@ -73,102 +73,38 @@
 ## 패키지 구조 (Package Structure)
 
 ### 전체 구조
->추후 변동 가능성⭕
 ```
 src/main/java/com/sparta/deliveryorderplatform
 │
-├── global
+├── global                          # 전역 설정 및 공통 모듈
 │   ├── config
-│   │   ├── SecurityConfig.java
-│   │   └── ScheduleConfig.java
+│   │   └──  SecurityConfig.java     # Spring Security 설정
 │   ├── exception
-│   │   ├── GlobalExceptionHandler.java
-│   │   └── CustomException.java
+│   │   ├── GlobalExceptionHandler.java  # 전역 예외 처리
+│   │   └── CustomException.java         # 커스텀 예외 클래스
+│   ├── entity
+│   │   └── BaseTimeEntity.java     # 생성일/수정일 공통 엔티티
 │   └── common
-│       └── ApiResponse.java
+│       └── ApiResponse.java        # 공통 API 응답 포맷
 │
-├── user
-│   ├── controller
-│   │   └── UserController.java
-│   ├── service
-│   │   └── UserService.java
-│   ├── repository
-│   │   └── UserRepository.java
-│   ├── entity
-│   │   └── User.java
-│   └── dto
-│       ├── UserRequestDto.java
-│       └── UserResponseDto.java
+├── user                            # 사용자 관련 기능
+├── store                           # 가게 관련 기능
+├── menu                            # 메뉴 관련 기능
+├── order                           # 주문 관련 기능
+├── payment                         # 결제 관련 기능
+├── review                          # 리뷰 관련 기능
 │
-├── store
-│   ├── controller
-│   │   └── StoreController.java
-│   ├── service
-│   │   └── StoreService.java
-│   ├── repository
-│   │   └── StoreRepository.java
-│   ├── entity
-│   │   └── Store.java
-│   └── dto
-│       ├── StoreRequestDto.java
-│       └── StoreResponseDto.java
-│
-├── menu
-│   ├── controller
-│   │   └── MenuController.java
-│   ├── service
-│   │   └── MenuService.java
-│   ├── repository
-│   │   └── MenuRepository.java
-│   ├── entity
-│   │   └── Menu.java
-│   └── dto
-│       ├── MenuRequestDto.java
-│       └── MenuResponseDto.java
-│
-├── order
-│   ├── controller
-│   │   └── OrderController.java
-│   ├── service
-│   │   └── OrderService.java
-│   ├── repository
-│   │   └── OrderRepository.java
-│   ├── entity
-│   │   ├── Order.java
-│   │   └── OrderItem.java
-│   └── dto
-│       ├── OrderRequestDto.java
-│       └── OrderResponseDto.java
-│
-├── payment
-│   ├── controller
-│   │   └── PaymentController.java
-│   ├── service
-│   │   └── PaymentService.java
-│   ├── repository
-│   │   └── PaymentRepository.java
-│   ├── entity
-│   │   └── Payment.java
-│   └── dto
-│       ├── PaymentRequestDto.java
-│       └── PaymentResponseDto.java
-│
-├── review
-│   ├── controller
-│   │   └── ReviewController.java
-│   ├── service
-│   │   └── ReviewService.java
-│   ├── repository
-│   │   └── ReviewRepository.java
-│   ├── entity
-│   │   └── Review.java
-│   └── dto
-│       ├── ReviewRequestDto.java
-│       └── ReviewResponseDto.java
-│
-└── DeliveryOrderPlatformApplication.java
+└── DeliveryOrderPlatformApplication.java   # 애플리케이션 진입점
 ```
-
+>각 도메인(user, store, menu, order, payment, review)은 동일한 구조로 구성됩니다.
+```
+{domain}/
+├── controller/     # HTTP 요청 처리
+├── service/        # 비즈니스 로직
+├── repository/     # DB 접근
+├── entity/         # JPA 엔티티
+└── dto/            # 요청/응답 데이터 객체
+```
 ---
 
 ## 레이어별 역할
@@ -239,3 +175,6 @@ UUID는 `550e8400-e29b-41d4-a716-446655440000` 같은 형태로, 전 세계에�
 
 **유저 엔티티만 예외인 이유:**
 유저는 내부 시스템에서 숫자 ID로 관리하는 것이 성능상 유리하거나, 별도의 보안 처리(JWT 등)가 이미 적용되어 있기 때문입니다.
+
+---
+

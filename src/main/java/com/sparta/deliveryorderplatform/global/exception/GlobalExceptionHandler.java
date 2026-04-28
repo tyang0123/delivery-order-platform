@@ -1,6 +1,12 @@
 package com.sparta.deliveryorderplatform.global.exception;
 
+import java.util.List;
+
+
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice; // 추가
 
@@ -14,6 +20,37 @@ public class GlobalExceptionHandler {
 		ErrorCode errorCode = e.getErrorCode();
 		return ResponseEntity
 			.status(errorCode.getStatus())
-			.body(ApiResponse.fail(errorCode.getStatus(), errorCode.getMessage()));
+			.body(ApiResponse.fail(errorCode));
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ApiResponse<?>> handleValidationException(MethodArgumentNotValidException e) {
+
+		List<FieldError> errors = e.getBindingResult()
+			.getFieldErrors()
+			.stream()
+			.map(error -> new FieldError(
+				error.getField(),
+				error.getDefaultMessage()
+			))
+			.toList();
+
+		ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
+
+		return ResponseEntity
+			.status(errorCode.getStatus())
+			.body(ApiResponse.fail(errorCode, errors));
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<?> handle(DataIntegrityViolationException e) {
+		if (e.getCause() instanceof ConstraintViolationException cve) {
+			String constraintName = cve.getConstraintName();
+			if (constraintName.contains("uk_review_order_id")) {
+				return ResponseEntity.status(409)
+						.body(ApiResponse.fail(ErrorCode.REVIEW_ALREADY_EXISTS));
+			}
+		}
+		return ResponseEntity.status(500).body(ApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR));
 	}
 }
