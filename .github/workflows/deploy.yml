@@ -2,7 +2,7 @@ name: Docker CI/CD to ECR
 
 on:
   push:
-    branches: [ "master" ] # master 브랜치 push할 때 트리거 발동
+    branches: [ "master" ] # master 브랜치 push할 때
 
 jobs:
   deploy:
