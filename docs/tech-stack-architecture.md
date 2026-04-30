@@ -10,8 +10,8 @@
 | ORM | JPA / Hibernate |
 | 데이터베이스 | PostgreSQL |
 | 빌드 툴 | Gradle |
-| 버전 관리 | Git (GitHub / GitLab / Bitbucket) |
-| API 문서 | Swagger / Notion / 별도 양식 (팀 결정) |
+| 버전 관리 | Git (GitHub) |
+| API 문서 | Swagger / Notion |
 | AI 연동 | Gemini API |
 
 ---
